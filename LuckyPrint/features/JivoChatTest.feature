@@ -7,7 +7,6 @@ Feature: Test Jivo Chat
     Given User opens home page
     And JivoChat window is present and reduced
     When JivoChat is opened automatically with certain delay
-#    !!!
     Then JivoChat window is opened automatically and contains the following:
       | Textarea                          | HelloMessage                   | Operator | Consultant  |
       | Введите сообщение и нажмите Enter | Здравствуйте, чем могу помочь? | оператор | Консультант |

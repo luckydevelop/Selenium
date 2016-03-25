@@ -7,18 +7,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Waits
-{
-    private Logger log = Logger.getLogger(new Object(){}.getClass().getName());
-    WebDriver driver;
+public class Waits {
+    private final Logger log = Logger.getLogger(new Object(){}.getClass().getName());
+    private final WebDriver driver;
 
     public Waits(WebDriver driver)
     {
        this.driver = driver;
     }
 
-    public WebElement explicitWaitVisibility(long timeout, By locator)
-    {
+    public WebElement explicitWaitVisibility(long timeout, By locator) {
         String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
         log.info("METHOD - " + methodName);
 
@@ -36,12 +34,11 @@ public class Waits
         return webElement;
     }
 
-    public boolean explicitWaitInvisibilityOfElementLocated(long timeout, By locator)
-    {
+    public boolean explicitWaitInvisibilityOfElementLocated(long timeout, By locator) {
         String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
         log.info("METHOD - " + methodName);
         WebDriverWait webDriverWait = new WebDriverWait(driver, timeout);
-        boolean isInVisible = true;
+        boolean isInVisible;
         try
         {
             isInVisible = webDriverWait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
@@ -49,14 +46,12 @@ public class Waits
         } catch (Exception e)
         {
             log.error("*** LOCATOR " + locator + " is NOT InVisible");
-
             isInVisible = false;
         }
         return isInVisible;
     }
 
-    public boolean isVisibleWebElemnt(By locator)
-    {
+    public boolean isVisibleWebElement(By locator) {
         String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
         log.info("METHOD - " + methodName);
         boolean res = explicitWaitInvisibilityOfElementLocated(3, locator);
@@ -64,8 +59,7 @@ public class Waits
         else return true;
     }
 
-    public void explicitWaitFrameToBeAvailableAndSwitchToIt(long timeout, By locator)
-    {
+    public void explicitWaitFrameToBeAvailableAndSwitchToIt(long timeout, By locator)  {
         String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
         log.info("METHOD - " + methodName);
 

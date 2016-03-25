@@ -10,33 +10,31 @@ import utility.Waits;
 
 public class JivoChat
 {
-    Logger log = Logger.getLogger(this.getClass().getSimpleName());
-    WebDriver driver;
-    Waits waits;
+    private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
+    private final WebDriver driver;
+    private final Waits waits;
 
-    private By jivoChatFrameName = By.xpath("//*[@id='jivo_container']");
-    private By messageOnReducedChat = By.xpath(".//*[@id='jivo-label-text']");
-    private By operatorAvatarWithOutPhoto = By.xpath(".//*[@id='header-animate-container']/div[2]/div[1]/div");
-    private By operatorAvatarWithPhoto = By.xpath(".//*[@id='header-animate-container']/div[1]/div[1]/div/img[contains(@src, 's3-eu-west-1.amazonaws.com/jivo-userdata/avatars/')]");
-    private By operatorLabel = By.xpath(".//*[@id='header-animate-container']/div[2]/div[2]/div[1]");
-    private By consultantLabel = By.xpath(".//*[@id='header-animate-container']/div[2]/div[2]/div[2]");
-    private By operatorSayHello = By.xpath(".//*[@id='messages-div-inner']/div[1]/div[2]/div/div/div");
-    private By textArea = By.xpath(".//*[@id='input-field']");
+    private final By jivoChatFrameName = By.xpath("//*[@id='jivo_container']");
+    private final By messageOnReducedChat = By.xpath(".//*[@id='jivo-label-text']");
+    private final By operatorAvatarWithOutPhoto = By.xpath(".//*[@id='header-animate-container']/div[2]/div[1]/div");
+    private final By operatorAvatarWithPhoto = By.xpath(".//*[@id='header-animate-container']/div[1]/div[1]/div/img[contains(@src, 's3-eu-west-1.amazonaws.com/jivo-userdata/avatars/')]");
+    private final By operatorLabel = By.xpath(".//*[@id='header-animate-container']/div[2]/div[2]/div[1]");
+    private final By consultantLabel = By.xpath(".//*[@id='header-animate-container']/div[2]/div[2]/div[2]");
+    private final By operatorSayHello = By.xpath(".//*[@id='messages-div-inner']/div[1]/div[2]/div/div/div");
+    private final By textArea = By.xpath(".//*[@id='input-field']");
 
-    public JivoChat(WebDriver driver)
-    {
+    public JivoChat(WebDriver driver) {
         this.driver = driver;
         waits = new Waits(driver);
     }
 
-    public void waitFrameAndSwitchToIt()
-    {
+    public void waitFrameAndSwitchToIt() {
         log.info("METHOD - " + new Object(){}.getClass().getEnclosingMethod().getName() +" " + jivoChatFrameName.toString());
         waits.explicitWaitFrameToBeAvailableAndSwitchToIt(10, jivoChatFrameName);
         log.info("SwitchTo next frame - " + jivoChatFrameName.toString());
     }
 
-    public WebElement waitVisibilityOfWebElement(int seconds, By xPath)    {
+    private WebElement waitVisibilityOfWebElement(int seconds, By xPath) {
         log.info("METHOD - " + new Object(){}.getClass().getEnclosingMethod().getName() + " " + xPath.toString());
         return waits.explicitWaitVisibility(seconds, xPath);
     }
@@ -48,7 +46,7 @@ public class JivoChat
         return textOfMessageOnReducedChat;
     }
 
-    public boolean isVisibleWebElemnt(By locator)   {
+    private boolean isVisibleWebElemnt(By locator) {
         log.info("METHOD - " + new Object(){}.getClass().getEnclosingMethod().getName());
         boolean res = waits.explicitWaitInvisibilityOfElementLocated(5, locator);
         if(res){
@@ -69,10 +67,10 @@ public class JivoChat
         return res;
     }
 
-    public boolean isVisibleOperatorAvatarWithPhoto()   {
+    public boolean isVisibleOperatorAvatarWithPhoto() {
         log.info("METHOD - " + new Object(){}.getClass().getEnclosingMethod().getName());
         WebElement imageFile;
-        Boolean imagePresent = null;
+        Boolean imagePresent;
         try        {
             imageFile =driver.findElement(operatorAvatarWithPhoto);
             imagePresent = (Boolean) ((JavascriptExecutor)driver).executeScript("return arguments[0].complete && typeof arguments[0].naturalWidth != \"undefined\" && arguments[0].naturalWidth > 0", imageFile);

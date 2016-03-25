@@ -10,106 +10,81 @@ import utility.Waits;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class MainPage
-{
+public class MainPage {
+    private final WebDriver driver;
+    private final Waits waits;
+    private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
-    public static class Header
-    {
-
-    }
-
-    public static class Footer
-    {
-
-    }
-
-    public static class Center
-    {
-
-    }
-
-
-    private WebDriver driver;
-    private Waits waits;
-    private Logger log = Logger.getLogger(this.getClass().getSimpleName());
-
-    By closeButton = By.xpath(".//*[@id='jivo_close_button']");
-    By promotedFirstProduct = By.xpath(".//*[@id='tab1']/ul/li[1]/div[1]");
-    By basket = By.xpath(".//*[@id='scroll']/div/div[4]/a[2]/p[1]");
+    private final By closeButton = By.xpath(".//*[@id='jivo_close_button']");
+    private final By promotedFirstProduct = By.xpath(".//*[@id='tab1']/ul/li[1]/div[1]");
+    private final By basket = By.xpath(".//*[@id='scroll']/div/div[4]/a[2]/p[1]");
 
     //BannerTabs
-    int i, j;
-    By tabLists = By.xpath(".//*[@id='content']/div/div[2]/div[1]/div[1]/ul/li");
-    By productsInTabLists = By.xpath(".//*[@id='tab" + (i + 1) + "']/ul/li");
+    int loopStepOuter, loopStepInner;
+    private final By tabLists = By.xpath(".//*[@id='content']/div/div[2]/div[1]/div[1]/ul/li");
+    private final By productsInTabLists = By.xpath(".//*[@id='tab" + (loopStepOuter + 1) + "']/ul/li");
 
-    String productsNamesXPath = ".//*[@id='tab%s']/ul/li[%s]/a";
-    String productsPricesXPath = ".//*[@id='tab%s']/ul/li[%s]/span[1]";
-    String productsCurrenciesXPath = ".//*[@id='tab%s']/ul/li[%s]/span[2]";
-    String productsDetailsXPath = ".//*[@id='tab%s']/ul/li[%s]/div[2]/a";
-    String productsImagesFirst = ".//*[@id='tab%s']/ul/li[%s]/div[1]/a/img[1]";
-    String productsImagesSecond = ".//*[@id='tab%s']/ul/li[%s]/div[1]/a/img[2]";
+    private final String productsNamesXPath = ".//*[@id='tab%s']/ul/li[%s]/a";
+    private final String productsPricesXPath = ".//*[@id='tab%s']/ul/li[%s]/span[1]";
+    private final String productsCurrenciesXPath = ".//*[@id='tab%s']/ul/li[%s]/span[2]";
+    private final String productsDetailsXPath = ".//*[@id='tab%s']/ul/li[%s]/div[2]/a";
+    private final String productsImagesFirst = ".//*[@id='tab%s']/ul/li[%s]/div[1]/a/img[1]";
+    private final String productsImagesSecond = ".//*[@id='tab%s']/ul/li[%s]/div[1]/a/img[2]";
 
-    public MainPage(WebDriver driver)
-    {
+    public MainPage(WebDriver driver) {
         this.driver = driver;
         waits = new Waits(driver);
     }
 
-    public LinkedHashMap<String, String> fullFillListFromBannerTabs()
-    {
+    public LinkedHashMap<String, String> fullFillListFromBannerTabs() {
         LinkedHashMap<String, String> bannerTabsData = new LinkedHashMap<String, String>();
         List<WebElement> bannerTabs = driver.findElements(tabLists);
         int quantityOfBannerTabs = bannerTabs.size();
         log.info("Quantity of tab is " + (quantityOfBannerTabs));
         bannerTabsData.put("QuantityOfTabs", new Integer(quantityOfBannerTabs).toString());
 
-
-        for (i = 0; i < quantityOfBannerTabs; i++)
-        {
-            WebElement currentTab = bannerTabs.get(i);
+        for (loopStepOuter = 0; loopStepOuter < quantityOfBannerTabs; loopStepOuter++) {
+            WebElement currentTab = bannerTabs.get(loopStepOuter);
             currentTab.click();
             String nameOfCurrentTab = currentTab.getText();
-            log.info("Name of Tab№ " + (i + 1) + " is " + nameOfCurrentTab);
-            bannerTabsData.put("Tab№" + (i + 1), nameOfCurrentTab);
+            log.info("Name of Tab№ " + (loopStepOuter + 1) + " is " + nameOfCurrentTab);
+            bannerTabsData.put("Tab№" + (loopStepOuter + 1), nameOfCurrentTab);
 
             List<WebElement> productsListInCurrentTab = driver.findElements(productsInTabLists);
             int productQuantity = productsListInCurrentTab.size();
-            log.info("Quantity of pruducts is " + productQuantity);
+            log.info("Quantity of products is " + productQuantity);
 
-            for (j = 0; j < productQuantity; j++)
-            {
-                WebElement productName = driver.findElement(By.xpath(String.format(productsNamesXPath, i + 1, j + 1)));
+            for (loopStepInner = 0; loopStepInner < productQuantity; loopStepInner++) {
+                WebElement productName = driver.findElement(By.xpath(String.format(productsNamesXPath, loopStepOuter + 1, loopStepInner + 1)));
                 String productNameText = productName.getText();
-                bannerTabsData.put("Tab" + (i + 1) + "Product" + (j + 1) + "ProductName", productNameText);
-                log.info("Tab" + (i + 1) + ", Product" + (j + 1) + " Name of current product is " + productNameText);
+                bannerTabsData.put("Tab" + (loopStepOuter + 1) + "Product" + (loopStepInner + 1) + "ProductName", productNameText);
+                log.info("Tab" + (loopStepOuter + 1) + ", Product" + (loopStepInner + 1) + " Name of current product is " + productNameText);
 
-                WebElement productPrice = driver.findElement(By.xpath(String.format(productsPricesXPath, i + 1, j + 1)));
+                WebElement productPrice = driver.findElement(By.xpath(String.format(productsPricesXPath, loopStepOuter + 1, loopStepInner + 1)));
                 String productPriceText = productPrice.getText();
-                bannerTabsData.put("Tab" + (i + 1) + "Product" + (j + 1) + "ProductPrice", productPriceText);
-                log.info("Tab" + (i + 1) + ", Product" + (j + 1) + " Price of current product is " + productPriceText);
+                bannerTabsData.put("Tab" + (loopStepOuter + 1) + "Product" + (loopStepInner + 1) + "ProductPrice", productPriceText);
+                log.info("Tab" + (loopStepOuter + 1) + ", Product" + (loopStepInner + 1) + " Price of current product is " + productPriceText);
 
-                WebElement productCurrency = driver.findElement(By.xpath(String.format(productsCurrenciesXPath, i + 1, j + 1)));
+                WebElement productCurrency = driver.findElement(By.xpath(String.format(productsCurrenciesXPath, loopStepOuter + 1, loopStepInner + 1)));
                 String productCurrencyText = productCurrency.getText();
-                bannerTabsData.put("Tab" + (i + 1) + "Product" + (j + 1) + "ProductCurrency", productCurrencyText);
-                log.info("Tab" + (i + 1) + ", Product" + (j + 1) + " Currency of current product is " + productCurrencyText);
+                bannerTabsData.put("Tab" + (loopStepOuter + 1) + "Product" + (loopStepInner + 1) + "ProductCurrency", productCurrencyText);
+                log.info("Tab" + (loopStepOuter + 1) + ", Product" + (loopStepInner + 1) + " Currency of current product is " + productCurrencyText);
 
-                WebElement productDetails = driver.findElement(By.xpath(String.format(productsDetailsXPath, i + 1, j + 1)));
+                WebElement productDetails = driver.findElement(By.xpath(String.format(productsDetailsXPath, loopStepOuter + 1, loopStepInner + 1)));
                 String productDetailsText = productDetails.getText();
-                bannerTabsData.put("Tab" + (i + 1) + "Product" + (j + 1) + "ProductDetail", productDetailsText);
-                log.info("Tab" + (i + 1) + ", Product" + (j + 1) + " Text of productDetails label is " + productDetailsText);
+                bannerTabsData.put("Tab" + (loopStepOuter + 1) + "Product" + (loopStepInner + 1) + "ProductDetail", productDetailsText);
+                log.info("Tab" + (loopStepOuter + 1) + ", Product" + (loopStepInner + 1) + " Text of productDetails label is " + productDetailsText);
 
                 WebElement productImage;
-                if (!waits.explicitWaitInvisibilityOfElementLocated(3, (By.xpath(String.format(productsImagesSecond, i + 1, j + 1)))))
-                {
-                    productImage = driver.findElement((By.xpath(String.format(productsImagesSecond, i + 1, j + 1))));
-                } else
-                {
-                    productImage = driver.findElement((By.xpath(String.format(productsImagesFirst, i + 1, j + 1))));
+                if (!waits.explicitWaitInvisibilityOfElementLocated(3, (By.xpath(String.format(productsImagesSecond, loopStepOuter + 1, loopStepInner + 1))))) {
+                    productImage = driver.findElement((By.xpath(String.format(productsImagesSecond, loopStepOuter + 1, loopStepInner + 1))));
+                } else {
+                    productImage = driver.findElement((By.xpath(String.format(productsImagesFirst, loopStepOuter + 1, loopStepInner + 1))));
                 }
 
                 Boolean isImagePresent = (Boolean) ((JavascriptExecutor) driver).executeScript("return arguments[0].complete && typeof arguments[0].naturalWidth != \"undefined\" && arguments[0].naturalWidth > 0", productImage);
-                bannerTabsData.put("Tab" + (i + 1) + "Product" + (j + 1) + "isImagePresent", isImagePresent.toString());
-                log.info("Tab" + (i + 1) + ", Product" + (j + 1) + " Is Image present on the page - " + isImagePresent);
+                bannerTabsData.put("Tab" + (loopStepOuter + 1) + "Product" + (loopStepInner + 1) + "isImagePresent", isImagePresent.toString());
+                log.info("Tab" + (loopStepOuter + 1) + ", Product" + (loopStepInner + 1) + " Is Image present on the page - " + isImagePresent);
 
             }
         }
@@ -117,46 +92,35 @@ public class MainPage
         return bannerTabsData;
     }
 
-    public void switchToDefaultContent()
-    {
-        log.info("METHOD - " + new Object()
-        {
+    public void switchToDefaultContent() {
+        log.info("METHOD - " + new Object() {
         }.getClass().getEnclosingMethod().getName());
         driver.switchTo().defaultContent();
         log.info("Switch to default content successfully");
     }
 
-    public void clickOnCloseButton()
-    {
-        log.info("METHOD - " + new Object()
-        {
+    public void clickOnCloseButton() {
+        log.info("METHOD - " + new Object() {
         }.getClass().getEnclosingMethod().getName());
         driver.findElement(closeButton).click();
         log.info("JivoChat is closed");
     }
 
-
-    public boolean isCloseButtonVisible()
-    {
-        log.info("METHOD - " + new Object()
-        {
+    public boolean isCloseButtonVisible() {
+        log.info("METHOD - " + new Object() {
         }.getClass().getEnclosingMethod().getName());
-        return waits.isVisibleWebElemnt(closeButton);
+        return waits.isVisibleWebElement(closeButton);
     }
 
-    public void clickOnPromotedFirstProduct()
-    {
-        log.info("METHOD - " + new Object()
-        {
+    public void clickOnPromotedFirstProduct() {
+        log.info("METHOD - " + new Object() {
         }.getClass().getEnclosingMethod().getName());
         driver.findElement(promotedFirstProduct).click();
         log.info("PromotedFirstProduct is clicked");
     }
 
-    public void clickOnBasket()
-    {
-        log.info("METHOD - " + new Object()
-        {
+    public void clickOnBasket() {
+        log.info("METHOD - " + new Object() {
         }.getClass().getEnclosingMethod().getName());
         driver.findElement(basket).click();
         log.info("Basket is clicked");

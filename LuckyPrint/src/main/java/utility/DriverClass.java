@@ -5,10 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-public class DriverClass
-{
-
-    static Logger log = Logger.getLogger(new Object() { }.getClass().getEnclosingClass().getSimpleName());
+public class DriverClass{
+    private static final Logger log = Logger.getLogger(new Object() { }.getClass().getEnclosingClass().getSimpleName());
 
     public static WebDriver getDriver(DriverEnum driverType)
     {
